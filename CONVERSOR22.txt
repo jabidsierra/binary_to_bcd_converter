@@ -1,0 +1,90 @@
+; entrada
+
+Binario             DSIN      0
+
+
+; salidas
+
+centenas            DSOUT      0
+decenas             DSOUT      1
+unidades            DSOUT      2
+
+
+IDLE: 
+
+                    IN        s8, binario
+                    LOAD      s5, 0
+                    LOAD      s6, 0
+                    LOAD      s7, 0
+
+CEN: 
+                    COMP      s8, 100
+                    JUMP      Z, SumaC
+                    JUMP      C, DEC
+                    JUMP      NZ, SumaC
+; RET       NZ, SumaC
+; CALL      Z, SumaC
+; RET       Z, SumaC
+
+SumaC: 
+                    SUB       s8, 100
+                    ADD       s7, 1
+                    COMP      s8, 100
+                    JUMP      Z, FINAL
+                    JUMP      C, DEC
+                    JUMP      NZ, CEN
+; RET       NZ, CEN
+; CALL      Z, CEN
+; RET       Z, CEN
+
+DEC: 
+                    COMP      s8, 10
+                    JUMP      C, UNI
+                    JUMP      NZ, SumaD
+; RET       NZ, SumaD
+; CALL      Z, SumaD
+; RET       Z, SumaD
+
+SumaD: 
+                    SUB       s8, 10
+                    ADD       s6, 1
+                    COMP      s8, 10
+                    JUMP      Z, DEC
+                    JUMP      C, UNI
+                    JUMP      NZ, DEC
+; RET       NZ, DEC
+; CALL      Z, DEC
+; RET       Z, DEC
+
+UNI: 
+                    COMP      s8, 1
+                    JUMP      C, FINAL
+                    JUMP      NZ, SumaU
+; RET       NZ, SumaU
+; CALL      Z, SumaU
+; RET       Z, SumaU
+
+SumaU: 
+                    SUB       s8, 1
+                    ADD       s5, 1
+                    COMP      s8, 1
+                    JUMP      Z, UNI
+                    JUMP      C, FINAL
+                    JUMP      NZ, UNI
+; RET       NZ, UNI
+; CALL      Z, UNI
+; RET       Z, UNI
+
+FINAL: 
+
+                    STORE     s5, 0
+                    STORE     s6, 1
+                    STORE     s7, 2
+
+
+FIN: 
+                    OUT       s5, unidades
+                    OUT       s6, decenas
+                    OUT       s7, centenas
+					JUMP	  IDLE	
+
